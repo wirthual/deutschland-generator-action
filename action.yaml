@@ -17,6 +17,10 @@ inputs:
     description: Name of the package
     required: true
     default: '1.0.0'
+  pypi-token:
+    description: Token to upload package to pypi
+    required: false
+    default: 'undefined'
 
 runs:
   using: composite
@@ -113,11 +117,11 @@ runs:
         path: ${{ github.workspace }}/python-client # or path/to/artifact
 
     # Upload to TestPyPI
-    - name: Upload to TestPyPI using twine
-      run: |
-        cd ${{ github.workspace }}/python-client
-        python -m twine upload dist/*
-      env:
-        TWINE_USERNAME: __token__
-        TWINE_PASSWORD: ${{ secrets.TEST_PYPI_API_TOKEN }}
-        TWINE_REPOSITORY: testpypi
+#    - name: Upload to TestPyPI using twine
+#      run: |
+#        cd ${{ github.workspace }}/python-client
+#        python -m twine upload dist/*
+#      env:
+#        TWINE_USERNAME: __token__
+#        TWINE_PASSWORD: ${{ inputs.pypi-token }}
+#        TWINE_REPOSITORY: testpypi
