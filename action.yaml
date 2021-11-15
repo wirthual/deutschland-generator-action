@@ -28,14 +28,11 @@ runs:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - name: Checkout
       uses: actions/checkout@v2
-      shell: bash
 
     - name: setup python
       uses: actions/setup-python@v2
       with:
         python-version: 3.7
-      shell: bash
-
 
     - name: "Clean up existing generated code"
       run: |
@@ -48,7 +45,6 @@ runs:
       with:
         file_glob: openapi.yaml
         spectral_ruleset: ${{ github.action_path }}/spectral.yaml
-      shell: bash
 
     - name: "Generate Python Client"
       uses: openapi-generators/openapitools-generator-action@v1
@@ -56,7 +52,6 @@ runs:
         generator: python
         openapi-file: openapi.yaml
         config-file: generator_config.yaml
-      shell: bash
 
     - name: "Print dir after generation"
       run: |
@@ -90,8 +85,6 @@ runs:
       with:
         name: "documentation"
         path: ${{ github.workspace }}/python-client/sphinx-docs/_build # or path/to/artifact
-      shell: bash
-
 
     - name: "Delete generated sphinx doc after upload"
       run: |
@@ -104,6 +97,8 @@ runs:
         git config --local user.name "bundesbot"
         git add --force -- ${{ github.workspace }}/python-client
         git commit -m "Generate newest code from openapi.yaml" -a
+      shell: bash
+
     - name: Push changes
       uses: ad-m/github-push-action@master
       with:
