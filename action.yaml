@@ -38,8 +38,8 @@ runs:
       run: |
         rm -rf ${{ github.workspace }}/python-client
         ls -al ${{ github.action_path }}
-        sudo chown -R runner:docker .
-        ls -al ${{ github.action_path }}
+        chmod -R 777 ${{ github.action_path }}
+
       shell: bash
 
     # Runs a single command using the runners shell
