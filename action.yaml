@@ -17,6 +17,14 @@ inputs:
     description: Name of the package
     required: true
     default: '1.0.0'
+  upload-to-pypi:
+    description: Should package be uploaded
+    required: false
+    default: "false"
+  use-testpypi:
+    description: Upload ot testpypi or pypi
+    required: false
+    default: "true"
   pypi-token:
     description: Token to upload package to pypi
     required: false
@@ -129,11 +137,13 @@ runs:
         path: ${{ github.workspace }}/python-client # or path/to/artifact
 
     # Upload to TestPyPI
-#    - name: Upload to TestPyPI using twine
-#      run: |
-#        cd ${{ github.workspace }}/python-client
-#        python -m twine upload dist/*
-#      env:
-#        TWINE_USERNAME: __token__
-#        TWINE_PASSWORD: ${{ inputs.pypi-token }}
-#        TWINE_REPOSITORY: testpypi
+    - name: Upload to TestPyPI using twine
+      run: |
+        cd ${{ github.workspace }}/python-client
+        python -m twine upload dist/*
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ inputs.pypi-token }}
+          TWINE_REPOSITORY: testpypi
+      shell: bash
+      if: ${{ input.upload-to-pypi }}
