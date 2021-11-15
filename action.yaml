@@ -37,6 +37,7 @@ runs:
     - name: "Clean up existing generated code"
       run: |
         rm -rf ${{ github.workspace }}/python-client
+        ls ${{ github.action_path }}
       shell: bash
 
     # Runs a single command using the runners shell
