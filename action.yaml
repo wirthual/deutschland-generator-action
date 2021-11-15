@@ -28,16 +28,19 @@ runs:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - name: Checkout
       uses: actions/checkout@v2
+      shell: bash
 
     - name: setup python
       uses: actions/setup-python@v2
       with:
         python-version: 3.7
+      shell: bash
 
 
     - name: "Clean up existing generated code"
       run: |
         rm -rf ${{ github.workspace }}/python-client
+      shell: bash
 
     # Runs a single command using the runners shell
     - name: "Check if file is correct"
@@ -45,6 +48,7 @@ runs:
       with:
         file_glob: openapi.yaml
         spectral_ruleset: ${{ github.action_path }}/spectral.yaml
+      shell: bash
 
     - name: "Generate Python Client"
       uses: openapi-generators/openapitools-generator-action@v1
@@ -52,15 +56,18 @@ runs:
         generator: python
         openapi-file: openapi.yaml
         config-file: generator_config.yaml
+      shell: bash
 
     - name: "Print dir after generation"
       run: |
         ls ${{ github.workspace }}
         ls ${{ github.workspace }}/python-client
+      shell: bash
 
     - name: "execute py script" # run the run.py to get the latest data
       run: |
         python rename_generated_code.py  ${{ inputs.package-name }}
+      shell: bash
 
     - name: Print python-client dir after renaming and move it into the deutschland subfolder
       run: |
@@ -71,21 +78,25 @@ runs:
         cp ${{ github.action_path }}/__init__.py.template  ${{ github.workspace }}/python-client/deutschland/__init__.py
         echo "======================= Python client / Deutschland ======================"
         ls ${{ github.workspace }}/python-client/deutschland
+      shell: bash
 
     - name: "generate sphinx-documentation"
       run: |
         pip install sphinx m2r2
         python create_doc.py ${{ inputs.package-name }} ${{ inputs.version }} de #TODO: lang also as input?
+      shell: bash
 
     - uses: actions/upload-artifact@v2
       with:
         name: "documentation"
         path: ${{ github.workspace }}/python-client/sphinx-docs/_build # or path/to/artifact
+      shell: bash
 
 
     - name: "Delete generated sphinx doc after upload"
       run: |
         rm -rf ${{ github.workspace }}/python-client/sphinx-docs/_build
+      shell: bash
 
     - name: Add and Commit files
       run: |
@@ -105,11 +116,13 @@ runs:
         pip install
         build twine
         --user
+      shell: bash
 
     - name: Build a binary wheel and a source tarball using build module
       run: |
         cd ${{ github.workspace }}/python-client
         python -m build --sdist --wheel --outdir dist/
+      shell: bash
 
     - uses: actions/upload-artifact@v2
       with:
