@@ -47,7 +47,6 @@ runs:
       uses: stoplightio/spectral-action@v0.8.1
       with:
         file_glob: openapi.yaml
-        spectral_ruleset: ${{ github.action_path }}/spectral.yaml
 
     - name: "Generate Python Client"
       uses: openapi-generators/openapitools-generator-action@v1
