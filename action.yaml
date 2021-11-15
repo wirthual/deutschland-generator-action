@@ -26,10 +26,10 @@ runs:
   using: composite
   steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-    - name: Checkout
+    - name: "Checkout"
       uses: actions/checkout@v2
 
-    - name: setup python
+    - name: "setup python"
       uses: actions/setup-python@v2
       with:
         python-version: 3.7
@@ -47,6 +47,7 @@ runs:
       uses: stoplightio/spectral-action@v0.8.1
       with:
         file_glob: openapi.yaml
+        spectral_ruleset: ${{ github.action_path }}/.spectral.yaml
 
     - name: "Generate Python Client"
       uses: openapi-generators/openapitools-generator-action@v1
@@ -66,7 +67,7 @@ runs:
         python ${{ github.action_path }}/rename_generated_code.py  ${{ inputs.package-name }}
       shell: bash
 
-    - name: Print python-client dir after renaming and move it into the deutschland subfolder
+    - name: "Print python-client dir after renaming and move it into the deutschland subfolder"
       run: |
         echo "======================== Python client ===================================="
         ls ${{ github.workspace }}/python-client
@@ -93,11 +94,11 @@ runs:
         rm -rf ${{ github.workspace }}/python-client/sphinx-docs/_build
       shell: bash
 
-    - name: Add and Commit files
+    - name: "Add and Commit files"
       run: |
         git config --local user.email "bundesAPI@users.noreply.github.com"
         git config --local user.name "bundesbot"
-        git add --force -- ${{ github.workspace }}/python-client
+        git add ${{ github.workspace }}/python-client
         git commit -m "Generate newest code from openapi.yaml" -a
       shell: bash
 
@@ -107,7 +108,7 @@ runs:
         github_token: ${{ github.token }}
         branch: ${{ github.ref }}
 
-    - name: Install pypa/build and twine for uploading
+    - name: "Install pypa/build and twine for uploading"
       run: >-
         python -m
         pip install
@@ -115,7 +116,7 @@ runs:
         --user
       shell: bash
 
-    - name: Build a binary wheel and a source tarball using build module
+    - name: "Build a binary wheel and a source tarball using build module"
       run: |
         cd ${{ github.workspace }}/python-client
         python -m build --sdist --wheel --outdir dist/
