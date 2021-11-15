@@ -37,7 +37,7 @@ runs:
     - name: "Clean up existing generated code"
       run: |
         rm -rf ${{ github.workspace }}/python-client
-        ls -al .
+        ls -al ${{ github.action_path }}
         sudo chown -R runner:docker .
         ls -al ${{ github.action_path }}
       shell: bash
@@ -47,7 +47,7 @@ runs:
       uses: stoplightio/spectral-action@v0.8.1
       with:
         file_glob: openapi.yaml
-        spectral_ruleset: spectral.yaml
+        spectral_ruleset: ${{ github.action_path }}/spectral.yaml
 
     - name: "Generate Python Client"
       uses: openapi-generators/openapitools-generator-action@v1
@@ -64,7 +64,7 @@ runs:
 
     - name: "execute py script" # run the run.py to get the latest data
       run: |
-        python rename_generated_code.py  ${{ inputs.package-name }}
+        python ${{ github.action_path }}/rename_generated_code.py  ${{ inputs.package-name }}
       shell: bash
 
     - name: Print python-client dir after renaming and move it into the deutschland subfolder
@@ -73,7 +73,7 @@ runs:
         ls ${{ github.workspace }}/python-client
         mkdir -p ${{ github.workspace }}/python-client/deutschland
         mv ${{ github.workspace }}/python-client/autobahn ${{ github.workspace }}/python-client/deutschland/autobahn
-        cp ./__init__.py.template  ${{ github.workspace }}/python-client/deutschland/__init__.py
+        cp ${{ github.action_path }}/__init__.py.template  ${{ github.workspace }}/python-client/deutschland/__init__.py
         echo "======================= Python client / Deutschland ======================"
         ls ${{ github.workspace }}/python-client/deutschland
       shell: bash
@@ -81,7 +81,7 @@ runs:
     - name: "generate sphinx-documentation"
       run: |
         pip install sphinx m2r2
-        python create_doc.py ${{ inputs.package-name }} ${{ inputs.version }} de #TODO: lang also as input?
+        python ${{ github.action_path }}/create_doc.py ${{ inputs.package-name }} ${{ inputs.version }} de #TODO: lang also as input?
       shell: bash
 
     - uses: actions/upload-artifact@v2
