@@ -36,10 +36,7 @@ runs:
 
     - name: "Clean up existing generated code"
       run: |
-        rm -rf ${{ github.workspace }}/python-client
-        ls -al ${{ github.action_path }}
-        chmod -R 777 ${{ github.action_path }}
-
+        sudo rm -rf ${{ github.workspace }}/python-client
       shell: bash
 
     # Runs a single command using the runners shell
@@ -92,6 +89,7 @@ runs:
     - name: "Delete generated sphinx doc after upload"
       run: |
         rm -rf ${{ github.workspace }}/python-client/sphinx-docs/_build
+        rm -rf ${{ github.workspace }}/python-client/.gitignore
       shell: bash
 
     - name: "Add and Commit files"
