@@ -47,7 +47,7 @@ runs:
       uses: stoplightio/spectral-action@v0.8.1
       with:
         file_glob: openapi.yaml
-        spectral_ruleset: ${{ github.action_path }}/spectral.yaml
+        spectral_ruleset: spectral.yaml
 
     - name: "Generate Python Client"
       uses: openapi-generators/openapitools-generator-action@v1
@@ -73,7 +73,7 @@ runs:
         ls ${{ github.workspace }}/python-client
         mkdir -p ${{ github.workspace }}/python-client/deutschland
         mv ${{ github.workspace }}/python-client/autobahn ${{ github.workspace }}/python-client/deutschland/autobahn
-        cp ${{ github.action_path }}/__init__.py.template  ${{ github.workspace }}/python-client/deutschland/__init__.py
+        cp ./__init__.py.template  ${{ github.workspace }}/python-client/deutschland/__init__.py
         echo "======================= Python client / Deutschland ======================"
         ls ${{ github.workspace }}/python-client/deutschland
       shell: bash
