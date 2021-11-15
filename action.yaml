@@ -146,4 +146,4 @@ runs:
           TWINE_PASSWORD: ${{ inputs.pypi-token }}
           TWINE_REPOSITORY: testpypi # TODO: Switch between test and pypi
       shell: bash
-      if: ${{ input.upload-to-pypi }}
+      if: ${{ inputs.upload-to-pypi }}
