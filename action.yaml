@@ -108,6 +108,7 @@ runs:
         git add ${{ github.workspace }}/python-client
         git commit -m "Generate newest code from openapi.yaml" -a
       shell: bash
+      continue-on-error: true
 
     - name: Push changes
       uses: ad-m/github-push-action@master
