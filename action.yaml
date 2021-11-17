@@ -47,13 +47,6 @@ runs:
         sudo rm -rf ${{ github.workspace }}/python-client
       shell: bash
 
-    # Runs a single command using the runners shell
-    - name: "Check if file is correct"
-      uses: stoplightio/spectral-action@v0.8.1
-      with:
-        file_glob: openapi.yaml
-        spectral_ruleset: ${{ github.action_path }}/.spectral.yaml
-
     - name: "Generate Python Client"
       uses: openapi-generators/openapitools-generator-action@v1
       with:
@@ -70,6 +63,15 @@ runs:
     - name: "execute py script" # run the run.py to get the latest data
       run: |
         python ${{ github.action_path }}/rename_generated_code.py  ${{ inputs.package-name }}
+      shell: bash
+
+    - name: "Remove not needed files"
+      run: |
+        echo "======================== Remove not needed files ===================================="
+        rm -rf ${{ github.workspace }}/python-client/.gitlab-ci.yml
+        rm -rf ${{ github.workspace }}/python-client/.travis.yml
+        rm -rf ${{ github.workspace }}/python-client/git_push.sh
+        ls ${{ github.workspace }}/python-client
       shell: bash
 
     - name: "Print python-client dir after renaming and move it into the deutschland subfolder"
@@ -138,7 +140,7 @@ runs:
     - name: Upload to TestPyPI using twine
       run: |
         cd ${{ github.workspace }}/python-client
-        python -m twine upload dist/*
+        python -m twine upload --skip-existing dist/*
       env:
         TWINE_USERNAME: __token__
         TWINE_PASSWORD: ${{ inputs.pypi-token }}
