@@ -1,0 +1,14 @@
+on: [push, pull_request]
+jobs:
+    openapi_check:
+      name: "OpenAPI check"
+      runs-on: ubuntu-latest
+      steps:
+        # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+        - name: Checkout
+          uses: actions/checkout@v2
+
+        - name: setup python
+          uses: actions/setup-python@v2
+          with:
+            python-version: 3.7
