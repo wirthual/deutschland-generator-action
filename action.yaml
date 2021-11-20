@@ -114,10 +114,11 @@ runs:
         rm -rf ${{ github.workspace }}/python-client/.gitignore
       shell: bash
 
-    - name: "Install black and use it to format code"
+    - name: "Install black and isort and use it to format code"
       run: |
-        pip install black
+        pip install black isort
         black ${{ github.workspace }}/python-client/
+        isort ${{ github.workspace }}/python-client/
       shell: bash
 
     - name: "Add and Commit files"

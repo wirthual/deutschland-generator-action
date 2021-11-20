@@ -5,7 +5,7 @@ from sys import argv
 
 if __name__ == "__main__":
 
-    (_,package_name) = argv
+    (_, package_name) = argv
 
     api = {"name": package_name}
     generation_base_path = f"./python-client"
@@ -32,4 +32,3 @@ if __name__ == "__main__":
             )
             with open(filepath, "w") as file:
                 file.write(s)
-
