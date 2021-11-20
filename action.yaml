@@ -118,7 +118,7 @@ runs:
       run: |
         pip install black isort
         black ${{ github.workspace }}/python-client/
-        isort ${{ github.workspace }}/python-client/
+        isort  --profile black ${{ github.workspace }}/python-client/
       shell: bash
 
     - name: "Add and Commit files"
