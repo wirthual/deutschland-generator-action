@@ -114,6 +114,12 @@ runs:
         rm -rf ${{ github.workspace }}/python-client/.gitignore
       shell: bash
 
+    - name: "Install black and use it to format code"
+      run: |
+        pip install black
+        black ${{ github.workspace }}/python-client/
+      shell: bash
+
     - name: "Add and Commit files"
       run: |
         git status
@@ -158,10 +164,10 @@ runs:
         TWINE_PASSWORD: ${{ inputs.pypi-token }}
         TWINE_REPOSITORY: testpypi
       shell: bash
-      if: ${{ inputs.upload-to-pypi }}
+      if: inputs.upload-to-pypi
 
     - name: Print upload skip
       run: |
         echo "Skip upload due to input upload-to-pypi set to false"
       shell: bash
-      if: ${{ !inputs.upload-to-pypi }}
+      if: !inputs.upload-to-pypi
