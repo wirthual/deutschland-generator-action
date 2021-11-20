@@ -6,33 +6,44 @@ branding:
 
 inputs:
   openapi-file:
-    description: The path to the OpenAPI document to generate a client library for
+    description: "The path to the OpenAPI document to generate a client library for"
     required: true
-    default: openapi.yaml
+    default: 'openapi.yaml'
   package-name:
-    description: Name of the package
+    description: "Name of the package"
     required: true
     default: 'undefined'
   version:
-    description: Name of the package
+    description: Version of the package
     required: true
     default: '1.0.0'
   upload-to-pypi:
     description: Should package be uploaded
     required: false
-    default: "false"
+    default: false
   use-testpypi:
-    description: Upload ot testpypi or pypi
+    description: "Upload ot testpypi (true) or pypi (false)"
     required: false
-    default: "true"
+    default: true
   pypi-token:
-    description: Token to upload package to pypi
+    description: "Token to upload package to pypi"
     required: false
     default: 'undefined'
 
 runs:
   using: composite
   steps:
+    # Print params of invocation
+    - name: "Print params of invocation for book keeping"
+      run: |
+        echo "Open Api File:" ${{ inputs.openapi-file }}
+        echo "Package Name:" ${{ inputs.package-name }}
+        echo "Version:" ${{ inputs.version }}
+        echo "Use Testpypi:" ${{ inputs.use-testpypi }}
+        echo "Pypi Token:" ${{ inputs.pypi-token }} | head -c4
+      shell: bash
+
+
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - name: "Checkout"
       uses: actions/checkout@v2
