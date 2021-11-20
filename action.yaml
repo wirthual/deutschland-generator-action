@@ -39,8 +39,9 @@ runs:
         echo "Open Api File:" ${{ inputs.openapi-file }}
         echo "Package Name:" ${{ inputs.package-name }}
         echo "Version:" ${{ inputs.version }}
+        echo "Upload-to-pypi:" ${{ inputs.upload-to-pypi }}
         echo "Use Testpypi:" ${{ inputs.use-testpypi }}
-        echo "Pypi Token:" ${{ inputs.pypi-token }} | head -c4
+        echo "Pypi Token:" ${{ inputs.pypi-token }} | head -c14
       shell: bash
 
 
@@ -158,3 +159,9 @@ runs:
         TWINE_REPOSITORY: testpypi
       shell: bash
       if: ${{ inputs.upload-to-pypi }}
+
+    - name: Print upload skip
+      run: |
+        echo "Skip upload due to input upload-to-pypi set to false"
+      shell: bash
+      if: ${{ !inputs.upload-to-pypi }}
