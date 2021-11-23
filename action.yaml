@@ -29,6 +29,11 @@ inputs:
     description: "Token to upload package to pypi"
     required: false
     default: 'undefined'
+  python-version:
+    description: "Python version to run on"
+    required: true
+    default: 3.7
+
 
 runs:
   using: composite
@@ -42,6 +47,7 @@ runs:
         echo "Upload-to-pypi:" ${{ inputs.upload-to-pypi }}
         echo "Use Testpypi:" ${{ inputs.use-testpypi }}
         echo "Pypi Token:" ${{ inputs.pypi-token }} | head -c14
+        echo "Python Version:" ${{ inputs.python-version }}
       shell: bash
 
 
@@ -52,7 +58,7 @@ runs:
     - name: "setup python"
       uses: actions/setup-python@v2
       with:
-        python-version: 3.7
+        python-version: ${{ inputs.python-version }}
 
     - name: "Clean up existing generated code"
       run: |
