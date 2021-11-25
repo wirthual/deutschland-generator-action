@@ -66,7 +66,9 @@ runs:
 
     - name: "Print dir after generation"
       run: |
+        echo "======================== Github Workspace ===================================="
         ls ${{ github.workspace }}
+        echo "======================== Python Client ===================================="
         ls ${{ github.workspace }}/python-client
       shell: bash
 
@@ -96,6 +98,8 @@ runs:
         rm -rf ${{ github.workspace }}/python-client/git_push.sh
         rm -rf ${{ github.workspace }}/python-client/rename_generated_code.py
         rm -rf ${{ github.workspace }}/python-client/create_doc.py
+        rm -rf ${{ github.workspace }}/python-client/setup.cfg
+        rm -rf ${{ github.workspace }}/python-client/setup.py
         ls ${{ github.workspace }}/python-client
       shell: bash
 
