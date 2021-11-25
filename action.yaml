@@ -155,10 +155,10 @@ runs:
         TWINE_PASSWORD: ${{ inputs.pypi-token }}
         TWINE_REPOSITORY: testpypi
       shell: bash
-      if: ${{ inputs.upload-to-pypi }}
+      if: ${{ inputs.upload-to-pypi == true }}
 
     - name: Print upload skip
       run: |
         echo "Skip upload due to input upload-to-pypi set to false"
       shell: bash
-      if: ${{ !inputs.upload-to-pypi }}
+      if: ${{ inputs.upload-to-pypi == false }}
