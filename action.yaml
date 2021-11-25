@@ -9,14 +9,6 @@ inputs:
     description: "The path to the OpenAPI document to generate a client library for"
     required: true
     default: 'openapi.yaml'
-  package-name:
-    description: "Name of the package"
-    required: true
-    default: 'undefined'
-  version:
-    description: Version of the package
-    required: true
-    default: '1.0.0'
   upload-to-pypi:
     description: Should package be uploaded
     required: false
@@ -80,33 +72,13 @@ runs:
 
     - name: "execute py script" # run the run.py to get the latest data
       run: |
-        python ${{ github.action_path }}/rename_generated_code.py  ${{ inputs.package-name }}
-      shell: bash
-
-    - name: "Remove not needed files"
-      run: |
-        echo "======================== Remove not needed files ===================================="
-        rm -rf ${{ github.workspace }}/python-client/.gitlab-ci.yml
-        rm -rf ${{ github.workspace }}/python-client/.travis.yml
-        rm -rf ${{ github.workspace }}/python-client/git_push.sh
-        ls ${{ github.workspace }}/python-client
-      shell: bash
-
-    - name: "Print python-client dir after renaming and move it into the deutschland subfolder"
-      run: |
-        echo "======================== Python client ===================================="
-        ls ${{ github.workspace }}/python-client
-        mkdir -p ${{ github.workspace }}/python-client/deutschland
-        mv ${{ github.workspace }}/python-client/autobahn ${{ github.workspace }}/python-client/deutschland/autobahn
-        cp ${{ github.action_path }}/__init__.py.template  ${{ github.workspace }}/python-client/deutschland/__init__.py
-        echo "======================= Python client / Deutschland ======================"
-        ls ${{ github.workspace }}/python-client/deutschland
+        python ${{ github.workspace }}/python-client/rename_generated_code.py
       shell: bash
 
     - name: "generate sphinx-documentation"
       run: |
         pip install sphinx m2r2
-        python ${{ github.action_path }}/create_doc.py ${{ inputs.package-name }} ${{ inputs.version }} de #TODO: lang also as input?
+        python ${{ github.workspace }}/python-client/create_doc.py
       shell: bash
 
     - uses: actions/upload-artifact@v2
@@ -114,10 +86,17 @@ runs:
         name: "documentation"
         path: ${{ github.workspace }}/python-client/sphinx-docs/_build # or path/to/artifact
 
-    - name: "Delete generated sphinx doc after upload"
+    - name: "Delete generated sphinx doc after upload and all files which are not needed"
       run: |
+        echo "======================== Remove not needed files ===================================="
         rm -rf ${{ github.workspace }}/python-client/sphinx-docs/_build
         rm -rf ${{ github.workspace }}/python-client/.gitignore
+        rm -rf ${{ github.workspace }}/python-client/.gitlab-ci.yml
+        rm -rf ${{ github.workspace }}/python-client/.travis.yml
+        rm -rf ${{ github.workspace }}/python-client/git_push.sh
+        rm -rf ${{ github.workspace }}/python-client/rename_generated_code.py
+        rm -rf ${{ github.workspace }}/python-client/create_doc.py
+        ls ${{ github.workspace }}/python-client
       shell: bash
 
     - name: "Install black and isort and use it to format code"
