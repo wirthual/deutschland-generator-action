@@ -9,12 +9,16 @@ inputs:
     description: "The path to the OpenAPI document to generate a client library for"
     required: true
     default: 'openapi.yaml'
+  commit-to-git:
+    description: "Should the generated code be added to git"
+    required: false
+    default: false
   upload-to-pypi:
-    description: Should package be uploaded to pypi
+    description: "Should package be uploaded to pypi"
     required: false
     default: false
   upload-to-testpypi:
-    description: Should package be uploaded to testpypi
+    description: "Should package be uploaded to testpypi"
     required: false
     default: false
   pypi-token:
@@ -22,7 +26,7 @@ inputs:
     required: false
     default: 'undefined'
   testpypi-token:
-    description: "Token to upload package to pypi"
+    description: "Token to upload package to testpypi"
     required: false
     default: 'undefined'
   python-version:
@@ -122,12 +126,14 @@ runs:
         git add ${{ github.workspace }}/python-client
         git commit --allow-empty -m "Generate newest code from openapi.yaml" -a
       shell: bash
+      if: ${{ inputs.commit-to-git == 'true' }}
 
-    - name: Push changes
+    - name: "Push changes"
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ github.token }}
         branch: ${{ github.ref }}
+      if: ${{ inputs.commit-to-git == 'true' }}
 
     - name: "Install pypa/build and twine for uploading"
       run: >-
@@ -155,7 +161,7 @@ runs:
         python -m twine upload --skip-existing dist/*
       env:
         TWINE_USERNAME: __token__
-        TWINE_PASSWORD: ${{ inputs.pypi-token }}
+        TWINE_PASSWORD: ${{ inputs.testpypi-token }}
         TWINE_REPOSITORY: testpypi
       shell: bash
       if: ${{ inputs.upload-to-testpypi == 'true' }}
