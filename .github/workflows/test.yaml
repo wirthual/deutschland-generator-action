@@ -5,10 +5,12 @@ jobs:
       runs-on: ubuntu-latest
       steps:
         # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-        - name: Checkout
-          uses: actions/checkout@v2
-
-        - name: setup python
-          uses: actions/setup-python@v2
+        - name: "Generate deutschland code"
+          uses: wirthual/deutschland-generator-action@v0.8.0
           with:
-            python-version: 3.7
+            openapi-file: "undefined"
+            upload-to-pypi: false
+            upload-to-testpypi: false
+            pypi-token: "Pypi token here"
+            testpypi-token: "TestPyPi token here"
+            python-version: "3.7"

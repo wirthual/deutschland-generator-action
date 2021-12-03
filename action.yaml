@@ -10,14 +10,18 @@ inputs:
     required: true
     default: 'openapi.yaml'
   upload-to-pypi:
-    description: Should package be uploaded
+    description: Should package be uploaded to pypi
     required: false
     default: false
-  use-testpypi:
-    description: "Upload ot testpypi (true) or pypi (false)"
+  upload-to-testpypi:
+    description: Should package be uploaded to testpypi
     required: false
-    default: true
+    default: false
   pypi-token:
+    description: "Token to upload package to pypi"
+    required: false
+    default: 'undefined'
+  testpypi-token:
     description: "Token to upload package to pypi"
     required: false
     default: 'undefined'
@@ -34,12 +38,11 @@ runs:
     - name: "Print params of invocation for book keeping"
       run: |
         echo "Open Api File:" ${{ inputs.openapi-file }}
-        echo "Package Name:" ${{ inputs.package-name }}
-        echo "Version:" ${{ inputs.version }}
-        echo "Upload-to-pypi:" ${{ inputs.upload-to-pypi }}
-        echo "Use Testpypi:" ${{ inputs.use-testpypi }}
+        echo "Upload-to-pypi:" ${{ inputs.upload-to-pypi == 'true' }}
+        echo "Upload-to-testpypi:" ${{ inputs.upload-to-testpypi == 'true'}}
         echo "Pypi Token:" ${{ inputs.pypi-token }} | head -c14
-        echo "Python Version:" ${{ inputs.python-version }}
+        echo "\nTestPypi Token:" ${{ inputs.testpypi-token }} | head -c14
+        echo "\nPython Version:" ${{ inputs.python-version }}
       shell: bash
 
 
@@ -153,12 +156,31 @@ runs:
       env:
         TWINE_USERNAME: __token__
         TWINE_PASSWORD: ${{ inputs.pypi-token }}
+        TWINE_REPOSITORY: testpypi
+      shell: bash
+      if: ${{ inputs.upload-to-testpypi == 'true' }}
+
+    - name: Print upload skip to pypi
+      run: |
+        echo "Skip upload to testpypi due to input upload-to-testpypi set to false"
+      shell: bash
+      if: ${{ inputs.upload-to-testpypi == 'false' }}
+
+
+    # Upload to PyPI
+    - name: Upload to TestPyPI using twine
+      run: |
+        cd ${{ github.workspace }}/python-client
+        python -m twine upload --skip-existing dist/*
+      env:
+        TWINE_USERNAME: __token__
+        TWINE_PASSWORD: ${{ inputs.pypi-token }}
         TWINE_REPOSITORY: pypi
       shell: bash
-      if: ${{ inputs.upload-to-pypi }}
+      if: ${{ inputs.upload-to-pypi == 'true' }}
 
-    - name: Print upload skip
+    - name: Print upload skip to pypi
       run: |
-        echo "Skip upload due to input upload-to-pypi set to false"
+        echo "Skip upload to Pypi due to input upload-to-pypi set to false"
       shell: bash
-      if: ${{ inputs.upload-to-pypi }}
+      if: ${{ inputs.upload-to-pypi == 'false' }}
