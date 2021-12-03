@@ -67,7 +67,6 @@ runs:
     - name: "Copy deutschland templates and .spectral.yaml into working directory from action repo"
       run: |
         cp -r ${{ github.action_path }}/deutschland_templates ${{ github.workspace }}
-        cp ${{ github.action_path }}/.spectral.yaml ${{ github.workspace }}
         ls ${{ github.workspace }}
       shell: bash
 
