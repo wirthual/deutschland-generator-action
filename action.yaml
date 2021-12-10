@@ -64,9 +64,9 @@ runs:
         sudo rm -rf ${{ github.workspace }}/python-client
       shell: bash
 
-    - name: "Copy deutschland templates and .spectral.yaml into working directory from action repo"
+    - name: "Copy deutschland templates into workspace if it not already exists"
       run: |
-        cp -r ${{ github.action_path }}/deutschland_templates ${{ github.workspace }}
+        cp -rn ${{ github.action_path }}/deutschland_templates ${{ github.workspace }}
         ls ${{ github.workspace }}
       shell: bash
 

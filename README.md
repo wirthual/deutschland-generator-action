@@ -13,6 +13,9 @@ Github action for the generation process of generating docs and code for the deu
 | `testpypi-token`     | false    | 'undefined'  | Token to upload package to testpypi                                | `${{ secrets.TEST_PYPI_API_TOKEN }}` |
 | `python-version`     | true     | 3.7          | Python version to run on                               | 3.8                                  |
 
+If you watn to use your custom templates, put them into a folder called ```deutschland_templates``` inside the root of your repostitory. 
+If it is existing, the action will use the provided templates, if not it will copy over the default templates from the deutschland-generator-action repo.
+
 ## Example
 
 ```yaml
