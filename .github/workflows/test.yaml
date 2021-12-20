@@ -1,16 +1,11 @@
 on: [push, pull_request]
 jobs:
-    openapi_check:
-      name: "OpenAPI check"
+    create_latest_tag:
+      name: "Create latest tag"
       runs-on: ubuntu-latest
       steps:
         # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-        - name: "Generate deutschland code"
-          uses: wirthual/deutschland-generator-action@v0.8.0
+        - name: Run latest-tag
+          uses: EndBug/latest-tag@latest
           with:
-            openapi-file: "undefined"
-            upload-to-pypi: false
-            upload-to-testpypi: false
-            pypi-token: "Pypi token here"
-            testpypi-token: "TestPyPi token here"
-            python-version: "3.7"
+            description: Update to newest version
