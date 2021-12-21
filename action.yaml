@@ -45,7 +45,7 @@ runs:
         echo "Upload-to-pypi:" ${{ inputs.upload-to-pypi == 'true' }}
         echo "Upload-to-testpypi:" ${{ inputs.upload-to-testpypi == 'true'}}
         echo "Pypi Token:" ${{ inputs.pypi-token }} | head -c14
-        echo -e "\nTestPypi Token:" ${{ inputs.testpypi-token }} | head -c14
+        echo -e "\nTestPypi Token:" ${{ inputs.testpypi-token }} | head -c18
         echo -e "\nPython Version:" ${{ inputs.python-version }}
       shell: bash
 
