@@ -76,6 +76,7 @@ runs:
         generator: python
         openapi-file: openapi.yaml
         config-file: generator_config.yaml
+        generator-tag: v6.1.0
 
     - name: "Print dir after generation"
       run: |
