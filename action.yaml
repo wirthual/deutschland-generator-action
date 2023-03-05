@@ -171,14 +171,13 @@ runs:
         TWINE_PASSWORD: ${{ inputs.testpypi-token }}
         TWINE_REPOSITORY: testpypi
       shell: bash
-      if: ${{ inputs.upload-to-testpypi == 'true' }}
+      if: ${{ inputs.upload-to-testpypi == 'true'  && github.ref == 'refs/heads/main' }}
 
-    - name: Print upload skip to pypi
+    - name: Print upload skip to test pypi
       run: |
-        echo "Skip upload to testpypi due to input upload-to-testpypi set to false"
+        echo "Skip upload to testpypi due to input upload-to-testpypi set to false or not on main branch"
       shell: bash
-      if: ${{ inputs.upload-to-testpypi == 'false' }}
-
+      if: ${{ inputs.upload-to-testpypi == 'false' || github.ref != 'refs/heads/main'}}
 
     # Upload to PyPI
     - name: Upload to TestPyPI using twine
@@ -190,10 +189,10 @@ runs:
         TWINE_PASSWORD: ${{ inputs.pypi-token }}
         TWINE_REPOSITORY: pypi
       shell: bash
-      if: ${{ inputs.upload-to-pypi == 'true' }}
+      if: ${{ inputs.upload-to-pypi == 'true' && github.ref == 'refs/heads/main' }}
 
     - name: Print upload skip to pypi
       run: |
-        echo "Skip upload to Pypi due to input upload-to-pypi set to false"
+        echo "Skip upload to Pypi due to input upload-to-pypi set to false or not on main branch"
       shell: bash
-      if: ${{ inputs.upload-to-pypi == 'false' }}
+      if: ${{ inputs.upload-to-pypi == 'false' || github.ref != 'refs/heads/main'}}
