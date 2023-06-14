@@ -33,6 +33,14 @@ inputs:
     description: "Python version to run on"
     required: true
     default: 3.7
+  overwrite-version:
+    description: "Version is pulled from tag and written into generator_config.yaml"
+    required: false
+    default: true
+  generator-tag:
+    description: "Version of the openapi generator used for code generation"
+    required: false
+    default: v6.1.0
 
 
 runs:
@@ -47,6 +55,9 @@ runs:
         echo "Pypi Token:" ${{ inputs.pypi-token }} | head -c14
         echo -e "\nTestPypi Token:" ${{ inputs.testpypi-token }} | head -c18
         echo -e "\nPython Version:" ${{ inputs.python-version }}
+        echo -e "\nOverwrite Version:" ${{ inputs.overwrite-version == 'true' }}
+        echo -e "\nGenerator Tag:" ${{ inputs.generator-tag }}
+        echo -e "\Version to inject:" ${{ github.ref_name }}
       shell: bash
 
 
@@ -70,13 +81,19 @@ runs:
         ls ${{ github.workspace }}
       shell: bash
 
+    - name: "Inject version from tag into generator_config.yaml"
+      uses: mikefarah/yq@master
+      with:
+        cmd: yq -i '.additionalProperties.packageVersion = strenv(GITHUB_REF_NAME)' -i generator_config.yaml
+      if: ${{ inputs.overwrite-version == 'true' && github.ref_type=='tag' }}
+
     - name: "Generate Python Client"
       uses: openapi-generators/openapitools-generator-action@v1
       with:
         generator: python
         openapi-file: openapi.yaml
         config-file: generator_config.yaml
-        generator-tag: v6.1.0
+        generator-tag: ${{ inputs.generator-tag }}
 
     - name: "Print dir after generation"
       run: |
@@ -171,13 +188,13 @@ runs:
         TWINE_PASSWORD: ${{ inputs.testpypi-token }}
         TWINE_REPOSITORY: testpypi
       shell: bash
-      if: ${{ inputs.upload-to-testpypi == 'true'  && github.ref == 'refs/heads/main' }}
+      if: ${{ inputs.upload-to-testpypi == 'true'  && github.ref_type!='tag' }}
 
     - name: Print upload skip to test pypi
       run: |
-        echo "Skip upload to testpypi due to input upload-to-testpypi set to false or not on main branch"
+        echo "Skip upload to testpypi due to input upload-to-testpypi set to false or not triggered from a tag"
       shell: bash
-      if: ${{ inputs.upload-to-testpypi == 'false' || github.ref != 'refs/heads/main'}}
+      if: ${{ inputs.upload-to-testpypi == 'false' || github.ref_type!='tag'}}
 
     # Upload to PyPI
     - name: Upload to TestPyPI using twine
@@ -189,10 +206,10 @@ runs:
         TWINE_PASSWORD: ${{ inputs.pypi-token }}
         TWINE_REPOSITORY: pypi
       shell: bash
-      if: ${{ inputs.upload-to-pypi == 'true' && github.ref == 'refs/heads/main' }}
+      if: ${{ inputs.upload-to-pypi == 'true' && github.ref_type=='tag' }}
 
     - name: Print upload skip to pypi
       run: |
-        echo "Skip upload to Pypi due to input upload-to-pypi set to false or not on main branch"
+        echo "Skip upload to Pypi due to input upload-to-pypi set to false or not triggered from a tag"
       shell: bash
-      if: ${{ inputs.upload-to-pypi == 'false' || github.ref != 'refs/heads/main'}}
+      if: ${{ inputs.upload-to-pypi == 'false' || github.ref_type!='tag' }}
