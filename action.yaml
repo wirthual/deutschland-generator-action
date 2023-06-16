@@ -1,5 +1,5 @@
 name: "Deutschland Generator Action"
-description: "Generates a client library and docs from an OpenAPI specification"
+description: "Generates a Python client library based on a remote OpenAPI specification for use in the deutschland package"
 branding:
   icon: target
   color: green
@@ -76,7 +76,7 @@ runs:
       uses: openapi-generators/openapitools-generator-action@v1
       with:
         generator: python
-        openapi-uri: openapi.yaml
+        openapi-file: openapi.yaml
         config-file: generator_config.yaml
         generator-tag: v6.1.0
 
