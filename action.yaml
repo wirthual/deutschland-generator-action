@@ -65,6 +65,7 @@ runs:
 
     - name: "Download latest OpenAPI spec"
       run: curl ${{ inputs.openapi-uri }} > openapi.yaml
+      shell: bash
 
     - name: "Copy deutschland templates into workspace if it not already exists"
       run: |
