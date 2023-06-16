@@ -1,14 +1,13 @@
 name: "Deutschland Generator Action"
-description: "Generates a client library and docs from an OpenAPI description"
+description: "Generates a client library and docs from an OpenAPI specification"
 branding:
   icon: target
   color: green
 
 inputs:
-  openapi-file:
-    description: "The path to the OpenAPI document to generate a client library for"
+  openapi-uri:
+    description: "The URI to the OpenAPI document to generate a client library for"
     required: true
-    default: 'openapi.yaml'
   commit-to-git:
     description: "Should the generated code be added to git"
     required: false
@@ -41,7 +40,7 @@ runs:
     # Print params of invocation
     - name: "Print params of invocation for book keeping"
       run: |
-        echo "Open Api File:" ${{ inputs.openapi-file }}
+        echo "OpenAPI URI:" ${{ inputs.openapi-uri }}
         echo "Upload-to-pypi:" ${{ inputs.upload-to-pypi == 'true' }}
         echo "Upload-to-testpypi:" ${{ inputs.upload-to-testpypi == 'true'}}
         echo "Pypi Token:" ${{ inputs.pypi-token }} | head -c14
@@ -64,6 +63,9 @@ runs:
         sudo rm -rf ${{ github.workspace }}/python-client
       shell: bash
 
+    - name: "Download latest OpenAPI spec"
+      run: curl ${{ inputs.openapi-uri }} > openapi.yaml
+
     - name: "Copy deutschland templates into workspace if it not already exists"
       run: |
         cp -rn ${{ github.action_path }}/deutschland_templates ${{ github.workspace }}
@@ -74,7 +76,7 @@ runs:
       uses: openapi-generators/openapitools-generator-action@v1
       with:
         generator: python
-        openapi-file: openapi.yaml
+        openapi-uri: openapi.yaml
         config-file: generator_config.yaml
         generator-tag: v6.1.0
 
@@ -131,7 +133,7 @@ runs:
         git config --local user.email "bundesAPI@users.noreply.github.com"
         git config --local user.name "bundesbot"
         git add ${{ github.workspace }}/python-client
-        git commit --allow-empty -m "Generate newest code from openapi.yaml" -a
+        git commit --allow-empty -m "Generate client from current OpenAPI spec" -a
       shell: bash
       if: ${{ inputs.commit-to-git == 'true' }}
 
