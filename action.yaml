@@ -52,10 +52,10 @@ runs:
 
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - name: "Checkout"
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     - name: "setup python"
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v5
       with:
         python-version: ${{ inputs.python-version }}
 
@@ -97,7 +97,7 @@ runs:
         python ${{ github.workspace }}/python-client/create_doc.py
       shell: bash
 
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v4
       with:
         name: "documentation"
         path: ${{ github.workspace }}/python-client/sphinx-docs/_build # or path/to/artifact
@@ -156,7 +156,7 @@ runs:
         python -m build --sdist --wheel --outdir dist/
       shell: bash
 
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v4
       with:
         name: "postprocessed-code"
         path: ${{ github.workspace }}/python-client # or path/to/artifact
